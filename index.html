@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BackToCare — Prototype 02</title>
+<style>
+body { margin: 0; padding: 0; background: #fafafa; }
+.btc-doc { width: 1240px; padding: 40px; box-sizing: border-box; background: #fafafa; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif; color: #0a0a0a; line-height: 1.4; margin: 0 auto; }
+.btc-doc * { box-sizing: border-box; }
+.btc-eyebrow { font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: 2.5px; text-transform: uppercase; }
+.btc-doc h1 { font-size: 32px; font-weight: 700; color: #0a0a0a; letter-spacing: -0.5px; margin: 10px 0 6px; }
+.btc-doc h2.title-large { font-size: 20px; font-weight: 700; margin: 4px 0 0; }
+.btc-tagline { font-size: 15px; color: #64748b; margin: 0; }
+.btc-section-head { display: flex; align-items: flex-start; gap: 14px; margin-top: 50px; margin-bottom: 24px; }
+.btc-bar { width: 3px; height: 42px; border-radius: 2px; flex-shrink: 0; margin-top: 4px; }
+.btc-section-head .meta-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+.btc-journey { position: relative; display: flex; gap: 15px; height: 30px; margin-bottom: 30px; }
+.btc-journey .track { position: absolute; left: 110px; right: 110px; top: 12px; height: 6px; border-radius: 3px; z-index: 0; }
+.btc-cell { width: 220px; display: flex; justify-content: center; align-items: center; position: relative; z-index: 1; }
+.btc-step { width: 28px; height: 28px; min-width: 28px; min-height: 28px; flex-shrink: 0; border-radius: 50%; color: white; font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+.btc-card-row { display: flex; gap: 15px; }
+.btc-card { width: 220px; height: 296px; background: white; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); display: flex; flex-direction: column; }
+.btc-card-eyebrow { font-size: 9px; font-weight: 700; color: #94a3b8; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; flex-shrink: 0; }
+.btc-card-visual { height: 140px; margin-bottom: 14px; flex-shrink: 0; }
+.btc-card h3 { font-size: 15px; font-weight: 600; margin: 0 0 6px; color: #0a0a0a; flex-shrink: 0; }
+.btc-card .desc { font-size: 12px; color: #64748b; margin: 0; line-height: 1.45; flex-shrink: 0; }
+.btc-card .caption { font-size: 11px; color: #94a3b8; margin-top: 6px; flex-shrink: 0; }
+.btc-mini-panel { background: #f8fafc; border-radius: 8px; padding: 12px; height: 100%; }
+.btc-panel-label { font-size: 9px; font-weight: 600; color: #0a0a0a; margin-bottom: 10px; }
+.btc-toggle-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #334155; margin-bottom: 8px; }
+.btc-toggle { width: 28px; height: 14px; min-width: 28px; flex-shrink: 0; border-radius: 7px; background: #e5e7eb; position: relative; }
+.btc-toggle.on { background: #6366f1; }
+.btc-toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 10px; height: 10px; border-radius: 50%; background: white; }
+.btc-toggle.on::after { left: 16px; }
+.btc-budget { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e5e7eb; padding-top: 6px; margin-top: 6px; font-size: 9px; color: #94a3b8; }
+.btc-budget strong { color: #0a0a0a; font-weight: 600; }
+.btc-week-label { font-size: 9px; font-weight: 600; color: #94a3b8; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
+.btc-kpi-grid { display: flex; gap: 8px; margin-bottom: 10px; }
+.btc-kpi { flex: 1; padding: 6px 10px; border-radius: 8px; }
+.btc-kpi.indigo { background: #eef2ff; }
+.btc-kpi.green { background: #ecfdf5; }
+.btc-kpi-label { font-size: 8px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; }
+.btc-kpi.indigo .btc-kpi-label { color: #6366f1; }
+.btc-kpi.green .btc-kpi-label { color: #10b981; }
+.btc-kpi-num { font-size: 20px; font-weight: 700; color: #0a0a0a; line-height: 1.1; }
+.btc-spark-label { font-size: 9px; color: #94a3b8; margin-top: 4px; }
+.btc-queue-label { font-size: 9px; font-weight: 600; color: #94a3b8; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; }
+.btc-queue-row { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-radius: 8px; padding: 5px 10px; margin-bottom: 4px; }
+.btc-queue-info-id { font-size: 10px; font-weight: 600; color: #0a0a0a; line-height: 1.2; }
+.btc-queue-info-meta { font-size: 9px; color: #94a3b8; line-height: 1.2; margin-top: 1px; }
+.btc-pill { font-size: 8px; font-weight: 700; padding: 3px 8px; border-radius: 8px; flex-shrink: 0; }
+.btc-pill.done { background: #ecfdf5; color: #10b981; }
+.btc-pill.book { background: #fef3c7; color: #f59e0b; }
+.btc-metric-card { background: #fef3c7; border-radius: 10px; padding: 14px; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.btc-metric-label { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #92400e; }
+.btc-metric-num { font-size: 32px; font-weight: 700; color: #92400e; margin: 12px 0 8px; line-height: 1; }
+.btc-metric-tag { display: inline-block; background: white; padding: 5px 12px; border-radius: 11px; font-size: 9px; font-weight: 600; color: #92400e; align-self: flex-start; }
+.btc-success-wrap { background: #f8fafc; border-radius: 10px; padding: 14px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.btc-success-wrap.tinted { background: #ecfdf5; }
+.btc-success-badge { width: 56px; height: 56px; min-width: 56px; min-height: 56px; flex-shrink: 0; border-radius: 50%; background: #10b981; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+.btc-success-line1 { font-size: 12px; font-weight: 600; color: #0a0a0a; flex-shrink: 0; }
+.btc-success-line2 { font-size: 9px; color: #94a3b8; margin-top: 2px; flex-shrink: 0; }
+.btc-questions { background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 24px; margin-top: 30px; }
+.btc-q-header { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px; }
+.btc-callout { border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; border-left: 3px solid; }
+.btc-callout.indigo { background: #eef2ff; border-left-color: #6366f1; }
+.btc-callout.teal { background: #f0fdfa; border-left-color: #0d9488; }
+.btc-callout-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.btc-callout.indigo .btc-callout-label { color: #6366f1; }
+.btc-callout.teal .btc-callout-label { color: #0d9488; }
+.btc-callout-text { font-size: 12.5px; color: #0a0a0a; line-height: 1.5; }
+.btc-callout-text em { font-style: italic; color: #475569; }
+.btc-q-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.btc-q-card { background: #fafafa; border-radius: 10px; padding: 12px 16px; }
+.btc-q-tag { font-size: 9px; font-weight: 700; margin-bottom: 8px; }
+.btc-q-text { font-size: 12px; color: #0a0a0a; line-height: 1.4; }
+.btc-probes { font-size: 11px; color: #94a3b8; margin-top: 16px; }
+.btc-journey-map { background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 24px; margin-bottom: 36px; }
+.btc-map-eyebrow { font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: 1.5px; text-transform: uppercase; }
+.btc-map-tagline { font-size: 14px; font-weight: 500; color: #0a0a0a; margin: 8px 0 24px; }
+.btc-map-row { position: relative; display: flex; gap: 15px; height: 90px; }
+.btc-map-row .track { position: absolute; left: 110px; right: 110px; top: 17px; height: 6px; background: #0d9488; border-radius: 3px; z-index: 0; }
+.btc-map-cell { width: 220px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; }
+.btc-map-cell .step { width: 28px; height: 28px; min-width: 28px; min-height: 28px; flex-shrink: 0; border-radius: 50%; background: #0d9488; color: white; font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; margin-top: 6px; }
+.btc-map-cell.tested .step { width: 36px; height: 36px; min-width: 36px; min-height: 36px; background: #f59e0b; font-size: 13px; margin-top: 2px; }
+.btc-map-frame-label { font-size: 10px; color: #94a3b8; margin-top: 10px; }
+.btc-map-test-pill { background: #fef3c7; padding: 4px 10px; border-radius: 11px; margin-top: 8px; font-size: 9px; font-weight: 700; color: #92400e; letter-spacing: 0.5px; }
+.btc-map-test-name { font-size: 10px; font-weight: 600; color: #0a0a0a; margin-top: 6px; }
+.btc-test-head { margin-bottom: 14px; }
+.btc-test-eyebrow { font-size: 10px; font-weight: 700; color: #f59e0b; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+.btc-test-title { font-size: 16px; font-weight: 600; color: #0a0a0a; }
+.btc-test-title .secondary { font-weight: 400; color: #64748b; }
+.btc-option-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px; }
+.btc-option { background: white; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.btc-option-eyebrow { font-size: 9px; font-weight: 700; color: #f59e0b; letter-spacing: 1.5px; text-transform: uppercase; }
+.btc-option h3 { font-size: 15px; font-weight: 600; margin: 8px 0 18px; color: #0a0a0a; }
+.btc-option-visual { margin-bottom: 18px; min-height: 60px; }
+.btc-option .divider { height: 1px; background: #f3f4f6; margin: 14px 0; }
+.btc-option .hypo-label { font-size: 9px; font-weight: 700; color: #94a3b8; letter-spacing: 1px; margin-bottom: 6px; }
+.btc-option .hypo-text { font-size: 11px; color: #475569; }
+.btc-big-num { font-size: 32px; font-weight: 700; color: #0a0a0a; margin-bottom: 8px; line-height: 1; }
+.btc-big-num.smaller { font-size: 26px; }
+.btc-big-num.smallest { font-size: 22px; }
+.btc-big-num-sub { font-size: 11px; color: #64748b; }
+.btc-contact { background: #f8fafc; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+.btc-contact-avatar { width: 28px; height: 28px; min-width: 28px; min-height: 28px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 11px; }
+.btc-contact-avatar.square { border-radius: 6px; }
+.btc-contact-info { flex: 1; min-width: 0; }
+.btc-contact-name { font-size: 11px; font-weight: 600; color: #0a0a0a; }
+.btc-contact-sub { font-size: 9px; color: #94a3b8; margin-top: 2px; }
+.btc-checklist-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 11px; }
+.btc-check { font-weight: 700; flex-shrink: 0; }
+.btc-check.on { color: #10b981; }
+.btc-check.off { color: #cbd5e1; }
+.btc-checklist-row.off { color: #cbd5e1; }
+.btc-checklist-row.on { color: #475569; }
+.btc-footer { background: #0a0a0a; color: white; border-radius: 14px; padding: 18px 24px; margin-top: 12px; }
+.btc-footer-label { font-size: 10px; font-weight: 700; color: #f59e0b; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.btc-footer-text { font-size: 12px; line-height: 1.45; }
+.btc-er-card { background: #fef2f2; border-radius: 10px; padding: 14px; height: 100%; }
+.btc-er-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.btc-er-pin { width: 28px; height: 28px; min-width: 28px; min-height: 28px; flex-shrink: 0; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; }
+.btc-er-pin-inner { width: 14px; height: 14px; min-width: 14px; min-height: 14px; flex-shrink: 0; border-radius: 50%; background: #dc2626; }
+.btc-er-name { font-size: 11px; font-weight: 600; color: #0a0a0a; }
+.btc-er-time { font-size: 9px; color: #64748b; margin-top: 2px; }
+.btc-er-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.btc-er-tag { background: white; padding: 4px 10px; border-radius: 10px; font-size: 9px; font-weight: 600; color: #dc2626; }
+.btc-call-card { background: #f0fdfa; border-radius: 10px; padding: 12px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.btc-call-eyebrow { font-size: 9px; font-weight: 600; color: #0d9488; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; flex-shrink: 0; }
+.btc-call-avatar { width: 44px; height: 44px; min-width: 44px; min-height: 44px; flex-shrink: 0; border-radius: 50%; background: #0d9488; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 18px; margin-bottom: 8px; }
+.btc-call-name { font-size: 12px; font-weight: 600; color: #0a0a0a; flex-shrink: 0; }
+.btc-call-sub { font-size: 9px; color: #64748b; margin-top: 2px; flex-shrink: 0; }
+.btc-offer-card { background: #f0fdfa; border-radius: 10px; padding: 14px; height: 100%; }
+.btc-offer-label { font-size: 9px; font-weight: 700; color: #0d9488; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+.btc-offer-line { font-size: 11px; color: #0a0a0a; margin-bottom: 6px; }
+.btc-offer-divider { border-top: 1px solid #a7f3d0; margin: 8px 0; }
+.btc-offer-bonus { font-size: 11px; font-weight: 600; color: #0d9488; }
+.btc-appt-card { background: #f8fafc; border-radius: 10px; padding: 14px; height: 100%; }
+.btc-appt-label { font-size: 9px; font-weight: 700; color: #0d9488; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+.btc-appt-row { display: flex; gap: 12px; }
+.btc-appt-date { background: white; border: 1px solid #e5e7eb; border-radius: 8px; width: 50px; min-width: 50px; flex-shrink: 0; text-align: center; overflow: hidden; }
+.btc-appt-day { background: #0d9488; color: white; font-size: 8px; font-weight: 700; padding: 4px; }
+.btc-appt-time { padding: 6px 0; font-size: 13px; font-weight: 700; color: #0a0a0a; }
+.btc-appt-detail { flex: 1; font-size: 11px; min-width: 0; }
+.btc-appt-doc { font-weight: 600; color: #0a0a0a; }
+.btc-appt-loc { font-size: 9px; color: #64748b; margin-top: 4px; }
+.btc-appt-ride { border-top: 1px solid #e5e7eb; margin-top: 10px; padding-top: 8px; font-size: 10px; font-weight: 600; color: #0d9488; }
+</style>
+</head>
+<body>
+<div class="btc-doc">
+
+  <div class="header">
+    <div class="btc-eyebrow">BACKTOCARE · PROTOTYPE 02</div>
+    <h1>Two stakeholders. One product.</h1>
+    <p class="btc-tagline">Storyboards, key test questions, and three testable prototypes</p>
+  </div>
+
+  <div class="btc-section-head">
+    <div class="btc-bar" style="background: #6366f1;"></div>
+    <div>
+      <div class="meta-eyebrow" style="color: #6366f1;">01 · The Buyer</div>
+      <h2 class="title-large">Mary, VP of Benefits</h2>
+    </div>
+  </div>
+
+  <div class="btc-journey">
+    <div class="track" style="background: #6366f1;"></div>
+    <div class="btc-cell"><div class="btc-step" style="background: #6366f1;">1</div></div>
+    <div class="btc-cell"><div class="btc-step" style="background: #6366f1;">2</div></div>
+    <div class="btc-cell"><div class="btc-step" style="background: #6366f1;">3</div></div>
+    <div class="btc-cell"><div class="btc-step" style="background: #6366f1;">4</div></div>
+    <div class="btc-cell"><div class="btc-step" style="background: #6366f1;">5</div></div>
+  </div>
+
+  <div class="btc-card-row">
+    <div class="btc-card">
+      <div class="btc-card-eyebrow">Step 01</div>
+      <div class="btc-card-visual">
+        <div class="btc-mini-panel">
+          <div class="btc-panel-label">Triggers</div>
+          <div class="btc-toggle-row"><span>ER discharges</span><div class="btc-toggle on"></div></div>
+          <div class="btc-toggle-row"><span>Missed refills</span><div class="btc-toggle on"></div></div>
+          <div class="btc-toggle-row"><span>New diagnoses</span><div class="btc-toggle"></div></div>
+          <div class="btc-budget"><span>Budget / mo</span><strong>$25k</strong></div>
+        </div>
+      </div>
+      <h3>Configure</h3>
+      <p class="desc">Pick triggers and budget,<br>approve incentives once.</p>
+      <div class="caption">~30 min setup</div>
+    </div>
+    <div class="btc-card">
+      <div class="btc-card-eyebrow">Step 02</div>
+      <div class="btc-card-visual">
+        <div class="btc-week-label">This week</div>
+        <div class="btc-kpi-grid">
+          <div class="btc-kpi indigo"><div class="btc-kpi-label">Alerts</div><div class="btc-kpi-num">28</div></div>
+          <div class="btc-kpi green"><div class="btc-kpi-label">Completed</div><div class="btc-kpi-num">13</div></div>
+        </div>
+        <svg width="180" height="22" viewBox="0 0 180 22"><polyline points="0,18 30,14 60,11 90,8 120,6 150,4 180,2" fill="none" stroke="#6366f1" stroke-width="2"/></svg>
+        <div class="btc-spark-label">12-week trend</div>
+      </div>
+      <h3>Monitor</h3>
+      <p class="desc">Weekly anonymized counts —<br>no member names, no PHI.</p>
+      <div class="caption">Aggregate view</div>
+    </div>
+    <div class="btc-card">
+      <div class="btc-card-eyebrow">Step 03</div>
+      <div class="btc-card-visual">
+        <div class="btc-queue-label">Queue · Anonymized</div>
+        <div class="btc-queue-row"><div><div class="btc-queue-info-id">#4821</div><div class="btc-queue-info-meta">ER · 3 days ago</div></div><div class="btc-pill done">DONE</div></div>
+        <div class="btc-queue-row"><div><div class="btc-queue-info-id">#1207</div><div class="btc-queue-info-meta">Rx miss · 5 days</div></div><div class="btc-pill done">DONE</div></div>
+        <div class="btc-queue-row"><div><div class="btc-queue-info-id">#9930</div><div class="btc-queue-info-meta">ER · 2 days ago</div></div><div class="btc-pill book">BOOK</div></div>
+      </div>
+      <h3>Review</h3>
+      <p class="desc">Status visible · auditable,<br>not actionable by HR.</p>
+      <div class="caption">Trust intact</div>
+    </div>
+    <div class="btc-card">
+      <div class="btc-card-eyebrow">Step 04</div>
+      <div class="btc-card-visual">
+        <div class="btc-metric-card">
+          <div class="btc-metric-label">YTD plan savings</div>
+          <div class="btc-metric-num">$3.2M</div>
+          <div class="btc-metric-tag">claims-validated</div>
+        </div>
+      </div>
+      <h3>Report</h3>
+      <p class="desc">Matched-control method,<br>defensible in audit.</p>
+      <div class="caption">CFO-grade evidence</div>
+    </div>
+    <div class="btc-card">
+      <div class="btc-card-eyebrow">Step 05</div>
+      <div class="btc-card-visual">
+        <div class="btc-success-wrap">
+          <div class="btc-success-badge">
+            <svg viewBox="0 0 32 32" width="32" height="32" style="display:block"><path d="M 8 17 L 14 23 L 24 11" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="btc-success-line1">+47% cohort</div>
+          <div class="btc-success-line2">expand next quarter</div>
+        </div>
+      </div>
+      <h3>Renew &amp; Expand</h3>
+      <p class="desc">No PEPM lock-in.<br>Adds new beachheads.</p>
+      <div class="caption">Frictionless renewal</div>
+    </div>
+  </div>
+
+  <div class="btc-questions">
+    <div class="btc-q-header" style="color: #6366f1;">Key Questions · Test with Mary</div>
+    <div class="btc-callout indigo">
+      <div class="btc-callout-label">Watch For</div>
+      <div class="btc-callout-text">How does she react to the <strong>$25k budget element</strong> vs. the <strong>trigger choices</strong>? This signals whether her primary lens is financial or operational — and what kind of vendor pitch lands first.</div>
+    </div>
+    <div class="btc-q-grid">
+      <div class="btc-q-card"><div class="btc-q-tag" style="color: #6366f1;">H1 · COMFORT</div><div class="btc-q-text">Are you comfortable with us doing personalized outreach to your members?</div></div>
+      <div class="btc-q-card"><div class="btc-q-tag" style="color: #6366f1;">H2 · ADDITIVE OR COMPETING</div><div class="btc-q-text">Does this sit alongside your existing vendors, or compete with them?</div></div>
+      <div class="btc-q-card"><div class="btc-q-tag" style="color: #6366f1;">H3 · TRIGGERS</div><div class="btc-q-text">Which outreach triggers do you believe would be the most useful?</div></div>
+      <div class="btc-q-card"><div class="btc-q-tag" style="color: #6366f1;">H4 · DATA ACCESS</div><div class="btc-q-text">Do you or your partners have the data that would make this workflow possible?</div></div>
+    </div>
+    <div class="btc-probes">Probes: "How would you want us to measure savings?" · "Where would this break operationally?" · "What would your CFO need to see?"</div>
+  </div>
+
+  <div class="btc-section-head">
+    <div class="btc-bar" style="background: #0d9488;"></div>
+    <div>
+      <div class="meta-eyebrow" style="color: #0d9488;">02 · The End User</div>
+      <h2 class="title-large">Julien, the 2%</h2>
+    </div>
+  </div>
+
+  <div class="btc-journey">
+    <div class="track" style="background: #0d9488;"></div>
+    <div class="btc-cell"><div class="btc-step" style="background: #0d9488;">1</div></div>
+    <div class="btc-cell"><div class="btc-step" style="background: #0d9488;">2</div></div>
+    <div class="btc-cell"><div class="btc-step" style="background: #0d9488;">3</div></div>
+    <div class="btc-cell"><div class="btc-step" style="background: #0d9488;">4</div></div>
+    <div class="btc-cell"><div class="btc-step" style="background: #0d9488;">5</div></div>
+  </div>
+
+  <div class="btc-card-row">
+    <div class="btc-card">
+      <div class="btc-card-eyebrow">Tue · 2 PM</div>
+      <div class="btc-card-visual">
+        <div class="btc-er-card">
+          <div class="btc-er-head"><div class="btc-er-pin"><div class="btc-er-pin-inner"></div></div><div><div class="btc-er-name">Memorial ED</div><div class="btc-er-time">Discharged 2:14 PM</div></div></div>
+          <div class="btc-er-tags"><span class="btc-er-tag">Chest pain</span><span class="btc-er-tag">No follow-up</span></div>
+        </div>
+      </div>
+      <h3>Leaves the ER</h3>
+      <p class="desc">Stable. Tired. Goes home<br>and tries to forget about it.</p>
+      <div class="caption">No plan, no follow-up</div>
+    </div>
+    <div class="btc-card">
+      <div class="btc-card-eyebrow">Wed · 10 AM</div>
+      <div class="btc-card-visual">
+        <div class="btc-call-card">
+          <div class="btc-call-eyebrow">Incoming call</div>
+          <div class="btc-call-avatar">M</div>
+          <div class="btc-call-name">Maria</div>
+          <div class="btc-call-sub">Care team · French speaker</div>
+        </div>
+      </div>
+      <h3>Maria calls</h3>
+      <p class="desc">A real human. Not the<br>employer. Not the insurer.</p>
+      <div class="caption">Trusted intermediary</div>
+    </div>
+    <div class="btc-card">
+      <div class="btc-card-eyebrow">On the call</div>
+      <div class="btc-card-visual">
+        <div class="btc-offer-card">
+          <div class="btc-offer-label">We'll handle it</div>
+          <div class="btc-offer-line">Book your PCP visit</div>
+          <div class="btc-offer-line">Arrange a ride both ways</div>
+          <div class="btc-offer-line">Text you the day before</div>
+          <div class="btc-offer-divider"></div>
+          <div class="btc-offer-bonus">+ $50 grocery card after</div>
+        </div>
+      </div>
+      <h3>Hears the offer</h3>
+      <p class="desc">Picks from a small menu.<br>Free to him — no copay.</p>
+      <div class="caption">"Sounds easy. Yes."</div>
+    </div>
+    <div class="btc-card">
+      <div class="btc-card-eyebrow">Within minutes</div>
+      <div class="btc-card-visual">
+        <div class="btc-appt-card">
+          <div class="btc-appt-label">Confirmed</div>
+          <div class="btc-appt-row">
+            <div class="btc-appt-date"><div class="btc-appt-day">THU</div><div class="btc-appt-time">4:00</div></div>
+            <div class="btc-appt-detail"><div class="btc-appt-doc">Dr. Patel · PCP</div><div class="btc-appt-loc">Bay Area Clinic<br>0.6 mi from home</div></div>
+          </div>
+          <div class="btc-appt-ride">✓ Ride scheduled (Lyft)</div>
+        </div>
+      </div>
+      <h3>Booked + ride set</h3>
+      <p class="desc">All done on this call.<br>Maria texts confirmation.</p>
+      <div class="caption">"Wait, that was it?"</div>
+    </div>
+    <div class="btc-card">
+      <div class="btc-card-eyebrow">Thursday</div>
+      <div class="btc-card-visual">
+        <div class="btc-success-wrap tinted">
+          <div class="btc-success-badge">
+            <svg viewBox="0 0 32 32" width="32" height="32" style="display:block"><path d="M 8 17 L 14 23 L 24 11" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="btc-success-line1">Visit completed</div>
+          <div class="btc-success-line2">Follow-up scheduled</div>
+        </div>
+      </div>
+      <h3>Shows up</h3>
+      <p class="desc">PCP visit completed.<br>Maria follows up after.</p>
+      <div class="caption">"I'd do this again"</div>
+    </div>
+  </div>
+
+  <div class="btc-questions">
+    <div class="btc-q-header" style="color: #0d9488;">Key Questions · Test with Julien</div>
+    <div class="btc-callout teal">
+      <div class="btc-callout-label">Warm-Up · Before Showing the Prototype</div>
+      <div class="btc-callout-text">Ask first, listen for 3–5 minutes: <em>"Tell me how you feel about managing your health. What about your life right now makes it hard to take care of your condition — what feels challenging or overwhelming?"</em> Note trust gaps, time/logistics constraints, and emotional state — these become the lens for everything that follows.</div>
+    </div>
+    <div class="btc-q-grid">
+      <div class="btc-q-card"><div class="btc-q-tag" style="color: #0d9488;">FRAME 2 · TRUST</div><div class="btc-q-text">Would you actually pick up? What would feel sketchy about this call?</div></div>
+      <div class="btc-q-card"><div class="btc-q-tag" style="color: #0d9488;">FRAME 3 · INCENTIVE</div><div class="btc-q-text">Which would get you to say yes today? Rank them.</div></div>
+      <div class="btc-q-card"><div class="btc-q-tag" style="color: #0d9488;">FRAME 4 · LOGISTICS</div><div class="btc-q-text">What does Maria need to do that we haven't shown?</div></div>
+      <div class="btc-q-card"><div class="btc-q-tag" style="color: #0d9488;">FRAME 5 · FOLLOW-THROUGH</div><div class="btc-q-text">Would you actually show up? What would make you cancel?</div></div>
+    </div>
+    <div class="btc-probes">Probes: "Where would this break for you?" · "What's missing?" · 24-hour recall test (strongest signal)</div>
+  </div>
+
+  <div class="btc-section-head">
+    <div class="btc-bar" style="background: #f59e0b;"></div>
+    <div>
+      <div class="meta-eyebrow" style="color: #f59e0b;">03 · Testable Prototypes</div>
+      <h2 class="title-large">Three experiments inside Julien's journey</h2>
+    </div>
+  </div>
+
+  <div class="btc-journey-map">
+    <div class="btc-map-eyebrow">Journey Map</div>
+    <div class="btc-map-tagline">Each test sits inside a specific frame of Julien's journey. We're not testing the whole product — we're stress-testing the three failure points.</div>
+    <div class="btc-map-row">
+      <div class="track"></div>
+      <div class="btc-map-cell"><div class="step">1</div><div class="btc-map-frame-label">Leaves ER</div></div>
+      <div class="btc-map-cell tested"><div class="step">2</div><div class="btc-map-test-pill">TEST 01</div><div class="btc-map-test-name">Caller identity</div></div>
+      <div class="btc-map-cell tested"><div class="step">3</div><div class="btc-map-test-pill">TEST 02</div><div class="btc-map-test-name">Incentive options</div></div>
+      <div class="btc-map-cell tested"><div class="step">4</div><div class="btc-map-test-pill">TEST 03</div><div class="btc-map-test-name">Logistics bundle</div></div>
+      <div class="btc-map-cell"><div class="step">5</div><div class="btc-map-frame-label">Shows up</div></div>
+    </div>
+  </div>
+
+  <div class="btc-test-head">
+    <div class="btc-test-eyebrow">Test 01 · Frame 02</div>
+    <div class="btc-test-title">Caller identity <span class="secondary">— who's on the other end of the call?</span></div>
+  </div>
+  <div class="btc-option-row">
+    <div class="btc-option"><div class="btc-option-eyebrow">Option A</div><h3>Maria · Care team</h3><div class="btc-option-visual"><div class="btc-contact"><div class="btc-contact-avatar" style="background: #0d9488;">M</div><div class="btc-contact-info"><div class="btc-contact-name">Maria</div><div class="btc-contact-sub">Care team · Local</div></div></div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Personal trust. Risk: unknown name.</div></div>
+    <div class="btc-option"><div class="btc-option-eyebrow">Option B</div><h3>Plan-branded</h3><div class="btc-option-visual"><div class="btc-contact"><div class="btc-contact-avatar square" style="background: #1e40af;">A</div><div class="btc-contact-info"><div class="btc-contact-name">Aetna Care</div><div class="btc-contact-sub">Your health plan</div></div></div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Institutional trust. Risk: denial-call vibe.</div></div>
+    <div class="btc-option"><div class="btc-option-eyebrow">Option C</div><h3>PCP office</h3><div class="btc-option-visual"><div class="btc-contact"><div class="btc-contact-avatar square" style="background: #059669;">+</div><div class="btc-contact-info"><div class="btc-contact-name">Dr. Patel's office</div><div class="btc-contact-sub">Bay Area Clinic</div></div></div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Clinical trust. Risk: hard to scale.</div></div>
+    <div class="btc-option"><div class="btc-option-eyebrow">Option D</div><h3>Point solution</h3><div class="btc-option-visual"><div class="btc-contact"><div class="btc-contact-avatar square" style="background: #db2777;">H</div><div class="btc-contact-info"><div class="btc-contact-name">Hinge Health</div><div class="btc-contact-sub">Your covered benefit</div></div></div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Vendor trust. Risk: only if enrolled.</div></div>
+  </div>
+
+  <div class="btc-test-head">
+    <div class="btc-test-eyebrow">Test 02 · Frame 03</div>
+    <div class="btc-test-title">Incentive options <span class="secondary">— what we offer to convert the call into a visit</span></div>
+  </div>
+  <div class="btc-option-row">
+    <div class="btc-option"><div class="btc-option-eyebrow">Option A</div><h3>Cash</h3><div class="btc-option-visual"><div class="btc-big-num">$50</div><div class="btc-big-num-sub">Visa card · after visit</div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Strongest pull for hourly workers.</div></div>
+    <div class="btc-option"><div class="btc-option-eyebrow">Option B</div><h3>Groceries + ride</h3><div class="btc-option-visual"><div class="btc-big-num smaller">$50 + ride</div><div class="btc-big-num-sub">Grocery card · transport</div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Same value, solves logistics too.</div></div>
+    <div class="btc-option"><div class="btc-option-eyebrow">Option C</div><h3>Lottery</h3><div class="btc-option-visual"><div class="btc-big-num">$5,000</div><div class="btc-big-num-sub">Quarterly draw · 1 entry / visit</div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Cheapest (~$10 expected per visit).</div></div>
+    <div class="btc-option"><div class="btc-option-eyebrow">Option D</div><h3>Skip the line</h3><div class="btc-option-visual"><div class="btc-big-num smallest">Same-day virtual</div><div class="btc-big-num-sub">Doctor today · no waiting</div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Removes the 31-day PCP wait.</div></div>
+  </div>
+
+  <div class="btc-test-head">
+    <div class="btc-test-eyebrow">Test 03 · Frame 04</div>
+    <div class="btc-test-title">Logistics bundle <span class="secondary">— how much of the ability gap we close for them</span></div>
+  </div>
+  <div class="btc-option-row">
+    <div class="btc-option"><div class="btc-option-eyebrow">Option A</div><h3>Booking only</h3><div class="btc-option-visual"><div class="btc-checklist-row on"><span class="btc-check on">✓</span><span>Schedule appointment</span></div><div class="btc-checklist-row off"><span class="btc-check off">○</span><span>Ride</span></div><div class="btc-checklist-row off"><span class="btc-check off">○</span><span>Reminders</span></div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Lightest touch. May not be enough.</div></div>
+    <div class="btc-option"><div class="btc-option-eyebrow">Option B</div><h3>+ Ride</h3><div class="btc-option-visual"><div class="btc-checklist-row on"><span class="btc-check on">✓</span><span>Schedule appointment</span></div><div class="btc-checklist-row on"><span class="btc-check on">✓</span><span>Lyft both ways</span></div><div class="btc-checklist-row off"><span class="btc-check off">○</span><span>Reminders</span></div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Removes the #1 ability barrier.</div></div>
+    <div class="btc-option"><div class="btc-option-eyebrow">Option C</div><h3>+ Reminders</h3><div class="btc-option-visual"><div class="btc-checklist-row on"><span class="btc-check on">✓</span><span>Schedule appointment</span></div><div class="btc-checklist-row on"><span class="btc-check on">✓</span><span>Lyft both ways</span></div><div class="btc-checklist-row on"><span class="btc-check on">✓</span><span>Texts + check-in call</span></div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Fights the 30–50% no-show rate.</div></div>
+    <div class="btc-option"><div class="btc-option-eyebrow">Option D</div><h3>Full concierge</h3><div class="btc-option-visual"><div class="btc-checklist-row on"><span class="btc-check on">✓</span><span>Everything above</span></div><div class="btc-checklist-row on"><span class="btc-check on">✓</span><span>Childcare voucher</span></div><div class="btc-checklist-row on"><span class="btc-check on">✓</span><span>PTO advocacy</span></div></div><div class="divider"></div><div class="hypo-label">HYPOTHESIS</div><div class="hypo-text">Highest cost. Worth it for top decile.</div></div>
+  </div>
+
+  <div class="btc-footer">
+    <div class="btc-footer-label">Decision Rules (apply to each test)</div>
+    <div class="btc-footer-text">≥3 of 5 pick the same option → that becomes the default · Mixed picks across personas → personalize by member type (becomes a design requirement)</div>
+  </div>
+
+</div>
+</body>
+</html>
